@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>   
 <div id="sectionContainerCenter">
 	<div>
-		<form id="frm" action="/restaurant/restRegProc" method="post" onsubmit="return chkFrm()">
+		<form id="frm" action="/rest/restReg" method="post" onsubmit="return chkFrm()">
 			<div><input type="text" name="nm" placeholder="가게명"></div>
 			<div>
 				<input type="text" name="addr" placeholder="주소" onkeyup="changeAddr()" style="width:200px;">
@@ -37,11 +37,11 @@
 			} else if(frm.lat.value == '0' || frm.lng.value == '0') {
 				alert('좌표값을 가져와 주세요.')				
 				return false
-			} else if(frm.cd_category.value == '0') {
+			} /*else if(frm.cd_category.value == '0') {
 				alert('카테고리를 선택해 주세요')
 				frm.cd_category.focus()
 				return false
-			}
+			}*/
 		}	
 	
 		function changeAddr() {
