@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.koreait.matzip.Const;
@@ -19,13 +20,20 @@ import com.koreait.matzip.user.model.UserVO;
 
 @Controller
 @RequestMapping("/user")
-public class UserController { 
+public class UserController {
 	
 	@Autowired
 	private UserService service;
 	
+	@RequestMapping(value="/logout", method = RequestMethod.GET)
+	public String logout(HttpSession hs) {
+		hs.invalidate();
+		return "redirect:/user/login";
+	}
+	
 	@RequestMapping(value="/login", method = RequestMethod.GET)
 	public String login(Model model) {
+		System.out.println("Controller - login");
 		model.addAttribute(Const.TITLE, "로그인");
 		model.addAttribute(Const.VIEW, "user/login");
 		return ViewRef.TEMP_DEFAULT;
@@ -35,16 +43,16 @@ public class UserController {
 	public String login(UserPARAM param, HttpSession hs, RedirectAttributes ra) {
 		int result = service.login(param);
 		
-		if(result == 1) {
+		if(result == Const.SUCCESS) {
 			hs.setAttribute(Const.LOGIN_USER, param);
 			return "redirect:/rest/map";
 		}
 		
 		String msg = null;
 		if(result == Const.NO_ID) {
-			msg="아이디를 확인해 주세요.";
+			msg = "아이디를 확인해 주세요.";
 		} else if(result == Const.NO_PW) {
-			msg ="비밀번호를 확인해 주세요.";
+			msg = "비밀번호를 확인해 주세요.";
 		}
 		
 		param.setMsg(msg);
@@ -78,8 +86,8 @@ public class UserController {
 	
 	@RequestMapping(value="/ajaxIdChk", method=RequestMethod.POST)
 	@ResponseBody
-	public String ajaxIdChk(@RequestBody UserPARAM param
-			) {
+	public String ajaxIdChk(@RequestBody UserPARAM param) {
+		System.out.println("user_id : " + param.getUser_id());
 		int result = service.login(param);
 		return String.valueOf(result);
 	}

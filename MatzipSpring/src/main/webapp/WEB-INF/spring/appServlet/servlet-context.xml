@@ -49,4 +49,11 @@
 	
 	<mybatis-spring:scan base-package="com.koreait.matzip"></mybatis-spring:scan>
 	
+	<interceptors>
+		<interceptor>
+			<mapping path="/**"/>			
+			<beans:bean class="com.koreait.matzip.LoginCheckInterceptor"/>
+		</interceptor>
+	</interceptors>
+
 </beans:beans>

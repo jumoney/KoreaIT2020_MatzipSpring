@@ -33,4 +33,8 @@ public class SecurityUtils {
 	public static String getEncrypt(String pw, String salt) {
 		return BCrypt.hashpw(pw, salt); 
 	}
+	
+	  public static int getLoginUserPk(HttpSession hs) {
+	      return ((UserVO)hs.getAttribute(Const.LOGIN_USER)).getI_user();
+	   }
 }

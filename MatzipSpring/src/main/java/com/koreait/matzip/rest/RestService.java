@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.koreait.matzip.model.CodeVO;
+import com.koreait.matzip.model.CommonMapper;
 import com.koreait.matzip.rest.model.RestDMI;
 import com.koreait.matzip.rest.model.RestPARAM;
 
@@ -15,18 +17,24 @@ public class RestService {
 	@Autowired
 	private RestMapper mapper;
 	
-	String selRestList(RestPARAM param) {
-		List<RestDMI> list = mapper.selRestList(param);
-		System.out.println("list : " + list);
-		if(list != null) {
-			System.out.println("size : " + list.size());
-			Gson gson = new Gson();
-			return gson.toJson(list);
-		}
-		return "";
+	@Autowired
+	private CommonMapper cMapper;
+		
+	public List<RestDMI> selRestList(RestPARAM param) {
+		return mapper.selRestList(param);
 	}
 	
-	public int restReg(RestPARAM param) {		
-		return mapper.insRestaurant(param);
+	public List<CodeVO> selCategoryList() {
+		CodeVO p = new CodeVO();
+		p.setI_m(1); //음식점 카테고리 코드 = 1
+		return cMapper.selCodeList(p);
+	}
+	
+	public RestDMI selRest(RestPARAM param) {
+		return mapper.selRest(param);
+	}
+	
+	public int insRest(RestPARAM param) {
+		return mapper.insRest(param);
 	}
 }

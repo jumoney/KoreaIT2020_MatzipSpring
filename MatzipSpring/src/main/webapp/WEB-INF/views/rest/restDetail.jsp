@@ -57,8 +57,8 @@
 						</span>
 					</div>
 					<div class="status branch_none">
-						<span class="cnt hit">${data.cntHits}</span>					
-						<span class="cnt favorite">${data.cntFavorite}</span>
+						<span class="cnt hit">${data.hits}</span>					
+						<span class="cnt favorite">${data.cnt_favorite}</span>
 					</div>
 				</div>
 				<div>
@@ -68,6 +68,10 @@
 							<tr>
 								<th>주소</th>
 								<td>${data.addr}</td>
+							</tr>
+							<tr>
+								<th>작성자</th>
+								<td>${data.user_nm}</td>
 							</tr>
 							<tr>
 								<th>카테고리</th>

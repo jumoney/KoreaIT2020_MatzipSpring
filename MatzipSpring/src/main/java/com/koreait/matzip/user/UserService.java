@@ -30,6 +30,7 @@ public class UserService {
 			return Const.NO_PW;
 		}
 		
+		param.setI_user(dbUser.getI_user());
 		param.setUser_pw(null);
 		param.setNm(dbUser.getNm());
 		param.setProfile_img(dbUser.getProfile_img());
