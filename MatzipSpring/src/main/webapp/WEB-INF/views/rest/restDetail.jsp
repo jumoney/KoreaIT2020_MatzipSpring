@@ -5,11 +5,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <div>
 	<div class="recMenuContainer">
-		<c:forEach items="${recommendMenuList}" var="item">
+		<c:forEach items="${recMenuList}" var="item">
 			<div class="recMenuItem" id="recMenuItem_${item.seq}">
 				<div class="pic">
 					<c:if test="${item.menu_pic != null and item.menu_pic != ''}">
-						<img src="/res/img/restaurant/${data.i_rest}/${item.menu_pic}">
+						<img src="/res/img/rest/${data.i_rest}/rec_menu/${item.menu_pic}">
 					</c:if>
 				</div>
 				<div class="info">
@@ -32,7 +32,7 @@
 				<h2>- 추천 메뉴 -</h2>
 				<div>
 					<div><button type="button" onclick="addRecMenu()">추천 메뉴 추가</button></div>
-					<form id="recFrm" action="/restaurant/addRecMenusProc" enctype="multipart/form-data" method="post">
+					<form id="recFrm" action="/rest/recMenus" enctype="multipart/form-data" method="post">
 						<input type="hidden" name="i_rest" value="${data.i_rest}">
 						<div id="recItem"></div>
 						<div><input type="submit" value="등록"></div>
@@ -41,7 +41,7 @@
 				
 				<h2>- 메뉴 -</h2>
 				<div>
-					<form id="menuFrm" action="/restaurant/addMenusProc" enctype="multipart/form-data" method="post">
+					<form id="menuFrm" action="/rest/menus" enctype="multipart/form-data" method="post">
 						<input type="hidden" name="i_rest" value="${data.i_rest}">
 						<input type="file" name="menu_pic" multiple>
 						<div><input type="submit" value="등록"></div>
@@ -52,9 +52,7 @@
 			<div class="restaurant-detail">
 				<div id="detail-header">
 					<div class="restaurant_title_wrap">
-						<span class="title">
-							<h1 class="restaurant_name">${data.nm}</h1>						
-						</span>
+						<h1 class="restaurant_name">${data.nm}</h1>
 					</div>
 					<div class="status branch_none">
 						<span class="cnt hit">${data.hits}</span>					
@@ -70,23 +68,28 @@
 								<td>${data.addr}</td>
 							</tr>
 							<tr>
-								<th>작성자</th>
-								<td>${data.user_nm}</td>
-							</tr>
-							<tr>
 								<th>카테고리</th>
 								<td>${data.cd_category_nm}</td>
+							</tr>
+							<tr>
+								<th>작성자</th>
+								<td>${data.user_nm}</td>
 							</tr>
 							<tr>
 								<th>메뉴</th>
 								<td>	
 									<div class="menuList">
-									<c:if test="${fn:length(menuList) > 0}">
-										<c:forEach var="i" begin="0" end="${fn:length(menuList) > 3 ? 2 : fn:length(menuList) - 1}">
-											<div class="menuItem">
-												<img src="/res/img/restaurant/${data.i_rest}/menu/${menuList[i].menu_pic}">
-											</div>
-										</c:forEach>
+										<c:if test="${fn:length(menuList) > 0}">
+											<c:forEach var="i" begin="0" end="${fn:length(menuList) > 3 ? 2 : fn:length(menuList) - 1}">
+												<div class="menuItem">
+													<img src="/res/img/rest/${data.i_rest}/menu/${menuList[i].menu_pic}">
+													<c:if test="${loginUser.i_user == data.i_user}">
+														<div class="delIconContainer" onclick="delMenu(${menuList[i].seq})">
+															<span class="material-icons">clear</span>
+														</div>
+													</c:if>
+												</div>
+											</c:forEach>
 										</c:if>
 										<c:if test="${fn:length(menuList) > 3}">
 											<div class="menuItem bg_black">
@@ -113,7 +116,7 @@
 		}	
 		console.log('seq : ' + seq)
 		
-		axios.get('/restaurant/ajaxDelRecMenu', {
+		axios.get('/rest/ajaxDelRecMenu', {
 			params: {
 				i_rest: ${data.i_rest},
 				seq: seq
@@ -137,9 +140,16 @@
 		var inputPrice = document.createElement('input')
 		inputPrice.setAttribute('type', 'number')
 		inputPrice.setAttribute('name', 'menu_price')
+		inputPrice.value = '0';
 		var inputPic = document.createElement('input')
 		inputPic.setAttribute('type', 'file')
-		inputPic.setAttribute('name', 'menu_pic_' + idx++)
+		inputPic.setAttribute('name', 'menu_pic')
+		var delBtn = document.createElement('input');
+		delBtn.setAttribute('type', 'button');
+		delBtn.setAttribute('value', 'X');
+		delBtn.addEventListener('click', function() {
+			div.remove();
+		})
 		
 		div.append('메뉴: ')
 		div.append(inputNm)
@@ -147,13 +157,14 @@
 		div.append(inputPrice)
 		div.append(' 사진: ')
 		div.append(inputPic)
+		div.append(delBtn)
 		
 		recItem.append(div)
 	}
 	addRecMenu()
 	function isDel() {
 		if(confirm('삭제 하시겠습니까?')) {
-			location.href = '/restaurant/restDel?i_rest=${data.i_rest}'
+			location.href = '/rest/del?i_rest=${data.i_rest}'
 		}
 	}
 </script>
