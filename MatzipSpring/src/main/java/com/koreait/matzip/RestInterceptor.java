@@ -1,3 +1,4 @@
+  
 package com.koreait.matzip;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,41 +19,31 @@ public class RestInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, 
 			HttpServletResponse response, Object handler) throws Exception {	
+		System.out.println("rest - interceptor");
 		
 		String uri = request.getRequestURI();
-		System.out.println("uri: " + uri);
+		System.out.println("uri : " + uri);
 		String[] uriArr = uri.split("/");
 		
-		String[] checkkeywords = {"del", "Del", "ins", "upd"};
-		for(String keyword: checkkeywords) {
+		String[] checkKeywords = {"del", "Del", "upd", "Upd"};
+		for(String keyword: checkKeywords) {
 			if(uriArr[2].contains(keyword)) {
 				int i_rest = CommonUtils.getIntParameter("i_rest", request);
 				if(i_rest == 0) {
 					return false;
 				}
-				int i_user = SecurityUtils.getLoginUserPk(request);
-
+				int i_user = SecurityUtils.getLoginUserPk(request); //로그인한 사람의 i_user
+				
 				boolean result = _authSuccess(i_rest, i_user);
 				System.out.println("=== auth result : " + result);
 				return result;
 			}
 		}
-		
+		System.out.println("!!!=== auth result : true");
 		return true;
 	}
 	
 	private boolean _authSuccess(int i_rest, int i_user) {
-		RestPARAM param = new RestPARAM();
-		param.setI_rest(i_rest);
-
-		RestDMI dbResult = mapper.selRest(param);
-		if(dbResult == null || dbResult.getI_user() != i_user) {
-			return false;
-		}
-
-		return true;
+		return i_user == mapper.selRestChkUser(i_rest);
 	}
 }
-	
-			
-

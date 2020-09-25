@@ -7,11 +7,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -68,13 +66,20 @@ public class RestController {
 	public String detail(RestPARAM param, Model model) {
 		RestDMI data = service.selRest(param);
 		
+		//model.addAttribute("menuList", service.selRestMenus(param));
 		model.addAttribute("recMenuList", service.selRestRecMenus(param));
-		model.addAttribute("menuList", service.selRestMenus(param));
-		model.addAttribute("css", new String[]{"restDetail"});
 		model.addAttribute("data", data);
+		
+		model.addAttribute("css", new String[]{"restDetail", "swiper-bundle.min"});
 		model.addAttribute(Const.TITLE, data.getNm()); //가게명
 		model.addAttribute(Const.VIEW, "rest/restDetail");
 		return ViewRef.TEMP_MENU_TEMP;
+	}
+	
+	@RequestMapping("/ajaxSelMenuList")
+	@ResponseBody 
+	public List<RestRecMenuVO> ajaxSelMenuList(RestPARAM param) {
+		return service.selRestMenus(param);
 	}
 	
 	@RequestMapping("/del")
@@ -102,14 +107,20 @@ public class RestController {
 	
 	@RequestMapping("/ajaxDelRecMenu")
 	@ResponseBody public int ajaxDelRecMenu(RestPARAM param, HttpSession hs) {		
+		System.out.println("넘어왔나요????");
 		String path = "/resources/img/rest/" + param.getI_rest() + "/rec_menu/";
 		String realPath = hs.getServletContext().getRealPath(path);
 		param.setI_user(SecurityUtils.getLoginUserPk(hs)); //로긴 유저pk담기
-		return service.delRecMenu(param, realPath);
+		return service.delRestRecMenu(param, realPath);
 	}	
 	
-	@RequestMapping(value="/menus", method=RequestMethod.POST)
-	public String menus(@ModelAttribute RestFile param
+	@RequestMapping("/ajaxDelMenu")
+	@ResponseBody public int ajaxDelMenu(RestPARAM param) {	 //i_rest, seq, menu_pic
+		return service.delRestMenu(param);
+	}
+	
+	@RequestMapping("/menus")
+	public String menus(RestFile param
 			, HttpSession hs
 			, RedirectAttributes ra) {
 		
@@ -119,3 +130,5 @@ public class RestController {
 		return "redirect:/rest/detail";
 	}
 }
+
+

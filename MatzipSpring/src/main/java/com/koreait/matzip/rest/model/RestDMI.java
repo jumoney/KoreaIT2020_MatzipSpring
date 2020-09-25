@@ -1,6 +1,6 @@
 package com.koreait.matzip.rest.model;
 
-public class RestDMI extends RestVO{
+public class RestDMI extends RestVO {
 	private String cd_category_nm;
 	private String user_nm;
 	private int cnt_favorite;
@@ -23,5 +23,4 @@ public class RestDMI extends RestVO{
 	public void setCnt_favorite(int cnt_favorite) {
 		this.cnt_favorite = cnt_favorite;
 	}
-	
 }

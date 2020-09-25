@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>${title}</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/res/css/common.css">
+<link rel="stylesheet" type="text/css" href="/res/css/common.css?dkdddddkdkdk=11222">
 <c:forEach items="${css}" var="item">
 	<link rel="stylesheet" type="text/css" href="/res/css/${item}.css">
 </c:forEach>
@@ -39,9 +39,10 @@
 				<c:if test="${loginUser != null}">
 					<a class="ml15" href="/rest/reg">등록</a>
 				</c:if>
-				<c:if test="${loginUser != null}">
-					<a class="ml15" href="/user/restFavorite">찜</a>
+				<c:if test="${loginUser == null}">
+					<a class="ml15" href="#" onclick="alert('로그인이 필요합니다.')">등록</a>
 				</c:if>
+				<a class="ml15" href="/user/restFavorite">찜</a>
 			</div>
 		</header>
 		<section>
@@ -52,4 +53,3 @@
 		</footer>
 	</div>
 </body>
-</html>

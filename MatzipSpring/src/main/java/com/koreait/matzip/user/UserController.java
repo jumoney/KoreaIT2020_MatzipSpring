@@ -28,7 +28,7 @@ public class UserController {
 	@RequestMapping(value="/logout", method = RequestMethod.GET)
 	public String logout(HttpSession hs) {
 		hs.invalidate();
-		return "redirect:/user/login";
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value="/login", method = RequestMethod.GET)
@@ -45,7 +45,7 @@ public class UserController {
 		
 		if(result == Const.SUCCESS) {
 			hs.setAttribute(Const.LOGIN_USER, param);
-			return "redirect:/rest/map";
+			return "redirect:/";
 		}
 		
 		String msg = null;

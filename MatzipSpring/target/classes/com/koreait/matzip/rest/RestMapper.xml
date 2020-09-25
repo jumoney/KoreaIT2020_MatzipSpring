@@ -25,8 +25,8 @@
 		WHERE i_rest = #{i_rest}
 	</insert>
 	
-	<select id="selRestChkUser" parameterType="Integer" resultType="RestDMI">
-		SELECT i_rest FROM t_restaurant
+	<select id="selRestChkUser" resultType="Integer" parameterType="Integer">
+		SELECT i_user FROM t_restaurant 
 		WHERE i_rest = #{i_rest}
 	</select>
 	
@@ -56,7 +56,7 @@
 			GROUP BY i_rest
 		) D
 		ON A.i_rest = D.i_rest
-		WHERE A.i_rest = #{i_rest} 
+		WHERE A.i_rest = #{i_rest}
 	</select>
 	
 	<select id="selRestRecMenus" parameterType="RestPARAM" resultType="RestRecMenuVO">
@@ -72,16 +72,10 @@
 	<select id="selRestMenus" parameterType="RestPARAM" resultType="RestRecMenuVO">
 		SELECT A.seq, A.menu_pic
 		FROM t_restaurant_menu A
-		<if test="i_user > 0">
-			INNER JOIN t_restaurant B
-			ON A.i_rest = B.i_rest
-			AND B.i_user = #{i_user}
-		</if>
 		WHERE A.i_rest = #{i_rest}
 		<if test="seq > 0">
 			AND A.seq = #{seq}
 		</if>
-		
 	</select>
 	
 	<delete id="delRestRecMenu" parameterType="RestPARAM">
@@ -96,13 +90,10 @@
 	</delete>
 	
 	<delete id="delRestMenu" parameterType="RestPARAM">
-		DELETE A FROM t_restaurant_menu A
-		INNER JOIN t_restaurant B
-		ON A.i_rest = B.i_rest
-		WHERE B.i_rest = #{i_rest}
-		AND B.i_user = #{i_user}
+		DELETE FROM t_restaurant_menu		
+		WHERE i_rest = #{i_rest}		
 		<if test="seq > 0">
-			AND A.seq = #{seq}
+			AND seq = #{seq}
 		</if>
 	</delete>
 	
