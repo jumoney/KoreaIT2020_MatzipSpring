@@ -1,9 +1,5 @@
 package com.koreait.matzip;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Random;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -14,7 +10,12 @@ import com.koreait.matzip.user.model.UserVO;
 public class SecurityUtils {
 
 	public static int getLoginUserPk(HttpServletRequest request) {
-		return getLoginUser(request).getI_user();
+		return getLoginUserPk(request.getSession());
+	}
+	
+	public static int getLoginUserPk(HttpSession hs) {
+		UserVO loginUser = (UserVO)hs.getAttribute(Const.LOGIN_USER);
+		return loginUser == null ? 0 : loginUser.getI_user();
 	}
 	
 	public static UserVO getLoginUser(HttpServletRequest request) {
@@ -33,8 +34,4 @@ public class SecurityUtils {
 	public static String getEncrypt(String pw, String salt) {
 		return BCrypt.hashpw(pw, salt); 
 	}
-	
-	  public static int getLoginUserPk(HttpSession hs) {
-	      return ((UserVO)hs.getAttribute(Const.LOGIN_USER)).getI_user();
-	   }
 }
